@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Club</title>
+     
+        <link rel="stylesheet" href="../Assets/css/estilos.css">
+    </head>
+    <body>
+        <div class-"contenedor-formulario">
+            <h2>Registro de Asociado - Acerias</h2>
+            <form id="formRegistro" action="" method="POST">
+                <div class="grupo-input">
+                    <label>Ingresar Documento:</label>
+                    <input id="documento" type="number" placeholder="ejemplo: 1025528723">
+                </div>
+                <div class="grupo-input">
+                    <label>Nombre: </label>
+                    <input type="text" id="nombre" required placeholder="Ingrese nombres completos">
+                </div>
+                <div class="grupo-input">
+                    <label>Apellidos: </label>
+                    <input type="text" id="apellido" required placeholder="Ingrese Apellidos completos">
+                </div>
+                <div class="grupo-input">
+                    <label>Fecha de nacimiento: </label>
+                    <input type="date" id="fechaNacimiento" required>
+                </div>
+                 <div class="grupo-input">
+                    <label>Direccion de residencia: </label>
+                    <input type="text" id="direccion" required placeholder="Calle 11 # 10-20">
+                </div>
+                <div class="grupo-input">
+                    <label>Telefono: </label>
+                    <input type="text" id="telefono" required placeholder="Ej: 3131110011">
+                </div>
+                <div class="grupo-input">
+                    <label>Ciudad</label>
+                    <select id="ciudad" required>
+                        <option value="sogamoso">Sogamoso</option>
+                        <option value="duitama">Duitama</option>
+                        <option value="tunja">Tunja</option>
+                    </select>
+                </div>
+                <div class="grupo-input">
+                   <label>Correo: </label>
+                    <input type="email" id="email" required placeholder="Ej: ejemplo@gmail.com"> 
+                </div>
+                <div class="grupo-input">
+                    <label>Genero: </label>
+                    
+                    <input type="radio" id="femenino" name="genero" value="femenino">
+                    <label for="femenino">FEMENINO</label>
+                    <input type="radio" id="masculino" name="genero" value="masculino">
+
+                    <label for="masculino">MASCULINO</label>
+                    <input type="radio" id="otro" name="genero" value="otro">
+                    <label for="otro">OTRO</label>
+                </div>
+                <div class="grupo-botones">
+                    <button type="submit">Guardar</button>
+                    <button type="reset">Limpiar Formulario</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
