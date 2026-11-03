@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Pago - Club</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../Assets/css/formularios.css">
+</head>
+<body>
+
+    <div class="header-mr d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Registro de Pago</h3>
+        <a href="dashboard.html" class="btn btn-light btn-sm">
+            <i class="bi bi-arrow-left"></i> Volver al Dashboard
+        </a>
+    </div>
+
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card form-card celeste shadow-sm">
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="bi bi-credit-card icono-titulo text-info me-3"></i>
+                            <div>
+                                <h4 class="mb-0">Pago de cuota</h4>
+                                <small class="text-muted">Abono mensual a un préstamo</small>
+                            </div>
+                        </div>
+
+                        <form id="formPago" action="" method="POST">
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <label for="codigoPrestamo" class="form-label">Código del préstamo</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="codigoPrestamo" placeholder="Ej: P-001" required>
+                                        <button class="btn btn-outline-info" type="button" title="Buscar préstamo">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="fechaPago" class="form-label">Fecha de pago</label>
+                                    <input type="date" class="form-control" id="fechaPago" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="asociado" class="form-label">Asociado</label>
+                                    <input type="text" class="form-control" id="asociado"
+                                           placeholder="Se mostrará al buscar el préstamo" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="numeroCuota" class="form-label">N° de cuota</label>
+                                    <input type="number" class="form-control" id="numeroCuota" min="1" placeholder="Ej: 3" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="valorPago" class="form-label">Valor pagado</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="valorPago" min="1" step="1000" placeholder="Ej: 450000" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="observaciones" class="form-label">Observaciones <span class="text-muted">(opcional)</span></label>
+                                    <textarea class="form-control" id="observaciones" rows="2"></textarea>
+                                </div>
+
+                            </div>
+
+                            <hr class="my-4">
+
+                            <div class="d-flex gap-2 justify-content-end">
+                                <button type="reset" class="btn btn-outline-secondary">
+                                    <i class="bi bi-eraser"></i> Limpiar
+                                </button>
+                                <button type="submit" class="btn btn-info text-white">
+                                    <i class="bi bi-check-circle"></i> Registrar pago
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
