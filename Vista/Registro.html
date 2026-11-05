@@ -7,9 +7,9 @@
         <link rel="stylesheet" href="../Assets/css/estilos.css">
     </head>
     <body>
-        <div class-"contenedor-formulario">
+        <div class="contenedor-formulario">
             <h2>Registro de Asociado - Acerias</h2>
-            <form id="formRegistro" action="" method="POST">
+            <form id="formRegistro" action="../Modelo/guardarAsociado.php" method="POST">
                 <div class="grupo-input">
                     <label>Ingresar Documento:</label>
                     <input id="documento" type="number" placeholder="ejemplo: 1025528723">
@@ -61,7 +61,9 @@
                     <button type="submit">Guardar</button>
                     <button type="reset">Limpiar Formulario</button>
                 </div>
+                <p id="mensajeregistro" role="status" aria-live="polite"></p>
             </form>
+
         </div>
     </body>
 </html>
