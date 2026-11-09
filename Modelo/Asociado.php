@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../Config/conexion.php';
 
-
 class Asociado
 {
     private $documento;
@@ -13,6 +12,9 @@ class Asociado
     private $ciudad;
     private $telefono;
     private $email;
+    private $passwordHash;
+    private $password;
+    private $rol;
 
     private $conexion;
 
@@ -27,13 +29,23 @@ class Asociado
         $this->ciudad = $datos['ciudad'];
         $this->telefono = $datos['telefono'];
         $this->email = $datos['email'];
+        $this->passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
+        
+        // Si el formulario envía un rol, lo toma; de lo contrario, asigna 'asociado' por defecto
+        $this->rol = isset($datos['rol']) && !empty($datos['rol']) ? $datos['rol'] : 'asociado';
 
         $conexionDB = new Conexion();
         $this->conexion = $conexionDB->conectar();
     }
+
     public function guardar() 
     {
-        $sql = "INSERT INTO asociados (documento, nombre, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email) VALUES (:documento, :nombre, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email)"; 
+        // Hashea la contraseña de manera segura 
+        $passwordHash = password_hash($this->password, PASSWORD_DEFAULT);
+
+        $sql = "INSERT INTO asociados (documento, nombre, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email, :password_hash, rol) 
+                VALUES (:documento, :nombre, :apellidos, :fechaNacimiento, :genero, :direccionResidencia, :ciudad, :telefono, :email, :password_hash, :rol)"; 
+        
         $consulta = $this->conexion->prepare($sql);
         return $consulta->execute([
             ':documento' => $this->documento,
@@ -44,7 +56,10 @@ class Asociado
             ':direccionResidencia' => $this->direccionResidencia,
             ':ciudad' => $this->ciudad,
             ':telefono' => $this->telefono,
-            ':email' => $this->email
+            ':email' => $this->email,
+            ':password_hash' => $this->passwordHash,
+            ':rol' => $this->rol
         ]);
+    }
 }
-}
+?>

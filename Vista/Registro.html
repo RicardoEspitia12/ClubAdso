@@ -1,69 +1,94 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Club</title>
-     
-        <link rel="stylesheet" href="../Assets/css/estilos.css">
-    </head>
-    <body>
-        <div class="contenedor-formulario">
-            <h2>Registro de Asociado - Acerias</h2>
-            <form id="formRegistro" action="../Modelo/guardarAsociado.php" method="POST">
-                <div class="grupo-input">
-                    <label>Ingresar Documento:</label>
-                    <input id="documento" type="number" placeholder="ejemplo: 1025528723">
-                </div>
-                <div class="grupo-input">
-                    <label>Nombre: </label>
-                    <input type="text" id="nombre" required placeholder="Ingrese nombres completos">
-                </div>
-                <div class="grupo-input">
-                    <label>Apellidos: </label>
-                    <input type="text" id="apellido" required placeholder="Ingrese Apellidos completos">
-                </div>
-                <div class="grupo-input">
-                    <label>Fecha de nacimiento: </label>
-                    <input type="date" id="fechaNacimiento" required>
-                </div>
-                 <div class="grupo-input">
-                    <label>Direccion de residencia: </label>
-                    <input type="text" id="direccion" required placeholder="Calle 11 # 10-20">
-                </div>
-                <div class="grupo-input">
-                    <label>Telefono: </label>
-                    <input type="text" id="telefono" required placeholder="Ej: 3131110011">
-                </div>
-                <div class="grupo-input">
-                    <label>Ciudad</label>
-                    <select id="ciudad" required>
-                        <option value="sogamoso">Sogamoso</option>
-                        <option value="duitama">Duitama</option>
-                        <option value="tunja">Tunja</option>
-                    </select>
-                </div>
-                <div class="grupo-input">
-                   <label>Correo: </label>
-                    <input type="email" id="email" required placeholder="Ej: ejemplo@gmail.com"> 
-                </div>
-                <div class="grupo-input">
-                    <label>Genero: </label>
-                    
-                    <input type="radio" id="femenino" name="genero" value="femenino">
-                    <label for="femenino">FEMENINO</label>
-                    <input type="radio" id="masculino" name="genero" value="masculino">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asociado - Club</title>
+    <link rel="stylesheet" href="../Assets/css/estilos.css">
+</head>
+<body>
+    <div class="contenedor-formulario">
+        <h2>Registro de Asociado - Acerías</h2>
+        
+        <form id="formRegistro" action="../Modelo/guardarAsociado.php" method="POST">
+            
+            <div class="grupo-input">
+                <label>Ingresar Documento:</label>
+                <input id="documento" name="documento" type="number" placeholder="Ejemplo: 1025528723" required>
+            </div>
+            
+            <div class="grupo-input">
+                <label>Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ingrese nombres completos">
+            </div>
+            
+            <div class="grupo-input">
+                <label>Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" required placeholder="Ingrese apellidos completos">
+            </div>
+            
+            <div class="grupo-input">
+                <label>Fecha de nacimiento:</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+            </div>
+            
+            <div class="grupo-input">
+                <label>Dirección de residencia:</label>
+                <input type="text" id="direccionResidencia" name="direccionResidencia" required placeholder="Calle 11 # 10-20">
+            </div>
+            
+            <div class="grupo-input">
+                <label>Teléfono:</label>
+                <input type="text" id="telefono" name="telefono" required placeholder="Ej: 3131110011">
+            </div>
+            
+            <div class="grupo-input">
+                <label>Ciudad:</label>
+                <select id="ciudad" name="ciudad" required>
+                    <option value="sogamoso">Sogamoso</option>
+                    <option value="duitama">Duitama</option>
+                    <option value="tunja">Tunja</option>
+                </select>
+            </div>
+            
+            <div class="grupo-input">
+                <label>Correo:</label>
+                <input type="email" id="email" name="email" required placeholder="Ej: ejemplo@gmail.com"> 
+            </div>
 
-                    <label for="masculino">MASCULINO</label>
-                    <input type="radio" id="otro" name="genero" value="otro">
-                    <label for="otro">OTRO</label>
-                </div>
-                <div class="grupo-botones">
-                    <button type="submit">Guardar</button>
-                    <button type="reset">Limpiar Formulario</button>
-                </div>
-                <p id="mensajeregistro" role="status" aria-live="polite"></p>
-            </form>
+            <!-- CONTRASEÑA -->
+            <div class="grupo-input">
+                <label>Contraseña:</label>
+                <input type="password" id="password" name="password" required placeholder="Ingrese su contraseña"> 
+            </div>
 
-        </div>
-    </body>
+            <!-- CONFIRMAR CONTRASEÑA (Coincide con asociado.confirmarPassword en tu JS) -->
+            <div class="grupo-input">
+                <label>Confirmar Contraseña:</label>
+                <input type="password" id="confirmarPassword" name="confirmarPassword" required placeholder="Repita su contraseña"> 
+            </div>
+            
+            <div class="grupo-input">
+                <label>Género:</label>
+                <input type="radio" id="femenino" name="genero" value="femenino">
+                <label for="femenino">FEMENINO</label>
+                <input type="radio" id="masculino" name="genero" value="masculino">
+                <label for="masculino">MASCULINO</label>
+                <input type="radio" id="otro" name="genero" value="otro">
+                <label for="otro">OTRO</label>
+            </div>
+            
+            <div class="grupo-botones">
+                <button type="submit">Guardar</button>
+                <button type="reset">Limpiar Formulario</button>
+            </div>
+            
+            <!-- Etiqueta con el id en minúscula exacto como lo usa tu JS -->
+            <p id="mensajeregistro" role="status" aria-live="polite"></p>
+        </form>
+    </div>
+
+    <!-- Enlace único a tu controlador JS -->
+    <script src="../Controladores/Asociado.js"></script>
+</body>
 </html>
