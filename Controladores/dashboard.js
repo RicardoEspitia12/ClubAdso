@@ -4,20 +4,29 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
         return;
     }
+    
     const nombre = localStorage.getItem('nombre');
     const rol = localStorage.getItem('rol');
 
-    document.getElementById('nombreUsuario').textContent = nombre;
-    if (rol === 'Administrador') {
-        document.getElementById('tarjetasAdministrador').classList.remove('d-none');
-        document.getElementById('tarjetasAsociado').classList.add('d-none');
-    }else{
-        document.getElementById('tarjetasAdministrador').classList.remove('d-none');
-        document.getElementById('tarjetasAsociado').classList.add('d-none');
+    const labelNombre = document.getElementById('nombreUsuario');
+    if (labelNombre) {
+        labelNombre.textContent = nombre ? `Bienvenido, ${nombre}` : '';
+    }
+
+    const seccionAdmin = document.getElementById('tarjetasAdministrador');
+    const seccionAsociado = document.getElementById('tarjetasAsociado');
+
+    // Comparamos en minúsculas para evitar problemas si viene como 'admin' o 'Administrador'
+    if (rol && rol.toLowerCase() === 'admin') {
+        if (seccionAdmin) seccionAdmin.classList.remove('d-none');
+        if (seccionAsociado) seccionAsociado.classList.add('d-none');
+    } else {
+        if (seccionAdmin) seccionAdmin.classList.add('d-none');
+        if (seccionAsociado) seccionAsociado.classList.remove('d-none');
     }
 });
 
 function cerrarSesion() {
     localStorage.clear();
-    window.location.href = '../Vista/Login.html';
+    window.location.href = 'login.html'; // Ajusta la ruta de salida si es necesario
 }

@@ -13,7 +13,8 @@
             <p class="text-muted">Portal de Asociados - Acerías</p>
         </div>
 
-        <form id="formLogin" action="" method="POST">
+        <!-- Se quitó el action para que JavaScript maneje el envío por fetch -->
+        <form id="formLogin">
 
             <div class="grupo-input mb-3">
                 <label for="documento" class="form-label fw-semibold text-secondary">
@@ -60,6 +61,7 @@
                     ¿No tienes cuenta? Regístrate aquí
                 </a>
             </div>
+           <p id="mensajeLogin" class="text-danger mt-3 mb-0" role="alert"></p>
 
         </form>
     </div>

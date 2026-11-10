@@ -13,9 +13,7 @@ class Asociado
     private $telefono;
     private $email;
     private $passwordHash;
-    private $password;
     private $rol;
-
     private $conexion;
 
     public function __construct($datos)
@@ -40,10 +38,8 @@ class Asociado
 
     public function guardar() 
     {
-        // Hashea la contraseña de manera segura 
-        $passwordHash = password_hash($this->password, PASSWORD_DEFAULT);
-
-        $sql = "INSERT INTO asociados (documento, nombre, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email, :password_hash, rol) 
+        // Se corrige el nombre de la columna a 'password' y se usa el hash ya generado
+        $sql = "INSERT INTO asociados (documento, nombre, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email, password, rol) 
                 VALUES (:documento, :nombre, :apellidos, :fechaNacimiento, :genero, :direccionResidencia, :ciudad, :telefono, :email, :password_hash, :rol)"; 
         
         $consulta = $this->conexion->prepare($sql);
