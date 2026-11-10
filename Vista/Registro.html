@@ -59,13 +59,13 @@
             <!-- CONTRASEÑA -->
             <div class="grupo-input">
                 <label>Contraseña:</label>
-                <input type="password" id="password" name="password" required placeholder="Ingrese su contraseña"> 
+                <input type="password" id="password" name="password" minlength="8" required placeholder="Ingrese su contraseña"> 
             </div>
 
-            <!-- CONFIRMAR CONTRASEÑA (Coincide con asociado.confirmarPassword en tu JS) -->
+            <!-- CONFIRMAR CONTRASEÑA -->
             <div class="grupo-input">
                 <label>Confirmar Contraseña:</label>
-                <input type="password" id="confirmarPassword" name="confirmarPassword" required placeholder="Repita su contraseña"> 
+                <input type="password" id="confirmarPassword" name="confirmarPassword" minlength="8" required placeholder="Repita su contraseña"> 
             </div>
             
             <div class="grupo-input">
@@ -83,12 +83,10 @@
                 <button type="reset">Limpiar Formulario</button>
             </div>
             
-            <!-- Etiqueta con el id en minúscula exacto como lo usa tu JS -->
             <p id="mensajeregistro" role="status" aria-live="polite"></p>
         </form>
     </div>
 
-    <!-- Enlace único a tu controlador JS -->
     <script src="../Controladores/Asociado.js"></script>
 </body>
 </html>

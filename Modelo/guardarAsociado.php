@@ -8,7 +8,7 @@ try {
         throw new Exception('Método HTTP no permitido.');
     }
     
-    // Leemos el JSON que envía tu JavaScript de la foto
+    // Leemos el JSON que envía  JavaScript
     $json = file_get_contents('php://input');
     $datos = json_decode($json, true);
 
@@ -30,12 +30,17 @@ try {
         throw new Exception("Email inválido.");
     }
 
+    // Validación de longitud mínima de contraseña en el servidor (8 caracteres)
+    if (strlen($datos['password']) < 8) {
+        http_response_code(400);
+        throw new Exception("La contraseña debe tener al menos 8 caracteres.");
+    }
+
     $asociado = new Asociado($datos);
     $resultado = $asociado->guardar();
 
     if ($resultado) {
         http_response_code(201);
-        // Ojo: tu JS de la foto lee "resultado.mensaje", por eso aquí mandamos "mensaje"
         echo json_encode(["success" => true, "mensaje" => "Asociado guardado exitosamente."]);
     } else {  
         http_response_code(500);

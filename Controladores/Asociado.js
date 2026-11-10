@@ -9,7 +9,13 @@ formulario.addEventListener("submit", async function (event) {
     // Lee los campos del formulario y los convierte en un objeto
     const asociado = Object.fromEntries(new FormData(formulario).entries());
 
-    // Validación que tienes en la foto
+    // Validación de longitud mínima de contraseña (8 caracteres)
+    if (asociado.password.length < 8) {
+        document.getElementById("mensajeregistro").textContent = "La contraseña debe tener al menos 8 caracteres.";
+        return;
+    }
+
+    // Validación de que las contraseñas coincidan
     if (asociado.password !== asociado.confirmarPassword) {
         document.getElementById("mensajeregistro").textContent = "Las contraseñas no coinciden.";
         return;
