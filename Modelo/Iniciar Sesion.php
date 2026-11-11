@@ -9,7 +9,7 @@ try {
         http_response_code(405);
         throw new Exception('Método HTTP no permitido.');
     }
-
+2
     // Leemos los datos enviados por JSON o por POST tradicional
     $datos = json_decode(file_get_contents('php://input'), true);
     if (empty($datos)) {
