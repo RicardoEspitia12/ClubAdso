@@ -8,7 +8,7 @@ formulario.addEventListener('submit', async function (e){
     boton.disabled = true;
 
     try{
-      const respuesta = await fetch('../Modelo/Iniciar Sesion.php', {
+      const respuesta = await fetch('../Modelo/IniciarSesion.php', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
          body: JSON.stringify(Object.fromEntries(new FormData(formulario).entries()))

@@ -21,20 +21,22 @@
     </div>
 
     <div class="container py-4">
-        <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
-            <h4 class="mb-4">Datos de la actividad</h4>
-            <form id="formActividad" action="" method="POST">
+        <!-- FORMULARIO ORIGINAL DE REGISTRO / EDICIÓN -->
+        <div class="card shadow-sm p-4 mx-auto mb-4" style="max-width: 700px;">
+            <h4 class="mb-4" id="tituloFormulario">Datos de la actividad</h4>
+            <form id="formActividad">
+                <input type="hidden" id="indiceEdicion" value="-1">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Nombre de la actividad</label>
+                        <label for="nombreActividad" class="form-label">Nombre de la actividad</label>
                         <input type="text" id="nombreActividad" class="form-control" required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Fecha del evento</label>
+                        <label for="fechaEvento" class="form-label">Fecha del evento</label>
                         <input type="date" id="fechaEvento" class="form-control" required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Municipio</label>
+                        <label for="municipio" class="form-label">Municipio</label>
                         <select id="municipio" class="form-select" required>
                             <option value="">Seleccione</option>
                             <option value="Paipa">Paipa</option>
@@ -43,12 +45,12 @@
                             <option value="Tunja">Tunja</option>
                         </select>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Total recaudado</label>
-                        <input type="number" id="totalRecaudado" class="form-control" min="0" required>
+                    <div class="col-md-6" id="campoTotalRecaudado">
+                        <label for="totalRecaudado" class="form-label">Total recaudado</label>
+                        <input type="number" id="totalRecaudado" class="form-control" min="0" step="0.01" placeholder="Ej.: 1500000.00" required>
                     </div>
                     <div class="col-12">
-                        <label class="form-label">Asociados que participaron</label>
+                        <label for="participantes" class="form-label">Asociados que participaron</label>
                         <select id="participantes" class="form-select" multiple size="4">
                             <option value="1025528723">1025528723 - Admin MR</option>
                             <option value="1025528724">1025528724 - Juan Pérez</option>
@@ -58,12 +60,148 @@
                 </div>
 
                 <div class="d-flex gap-2 justify-content-end mt-4">
-                    <button type="reset" class="btn btn-secondary">Limpiar</button>
-                    <button type="submit" class="btn btn-primary">Guardar actividad</button>
+                    <button type="reset" id="btnLimpiar" class="btn btn-secondary">Limpiar</button>
+                    <button type="submit" id="guardarActividad" class="btn btn-primary">Guardar actividad</button>
                 </div>
             </form>
         </div>
+
+        <!-- TABLA DEL CRUD (LISTAR, EDITAR, ELIMINAR) -->
+        <div class="card shadow-sm p-4 mx-auto" style="max-width: 950px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Actividades Registradas</h5>
+                <span class="badge bg-primary" id="contadorActividades">0 actividades</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Actividad</th>
+                            <th>Fecha</th>
+                            <th>Municipio</th>
+                            <th>Total Recaudado</th>
+                            <th>Participantes</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaActividades">
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No hay actividades registradas aún.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
+    <script>
+        const formActividad = document.getElementById('formActividad');
+        const tablaActividades = document.getElementById('tablaActividades');
+        const contadorActividades = document.getElementById('contadorActividades');
+        const indiceEdicion = document.getElementById('indiceEdicion');
+        const tituloFormulario = document.getElementById('tituloFormulario');
+        const btnGuardar = document.getElementById('guardarActividad');
+        const btnLimpiar = document.getElementById('btnLimpiar');
+
+        // Cargar actividades guardadas temporalmente en el navegador
+        let actividades = JSON.parse(localStorage.getItem('club_actividades')) || [];
+
+        function renderizarTabla() {
+            contadorActividades.textContent = `${actividades.length} actividad(es)`;
+
+            if (actividades.length === 0) {
+                tablaActividades.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No hay actividades registradas aún.</td>
+                    </tr>`;
+                return;
+            }
+
+            tablaActividades.innerHTML = '';
+            actividades.forEach((act, index) => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${act.nombre}</td>
+                    <td>${act.fecha}</td>
+                    <td>${act.municipio}</td>
+                    <td>$${Number(act.recaudo).toLocaleString('es-CO')}</td>
+                    <td>${act.participantesTexto.join(', ') || 'Sin participantes'}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-warning btn-sm me-1" onclick="editarActividad(${index})">Editar</button>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarActividad(${index})">Eliminar</button>
+                    </td>
+                `;
+                tablaActividades.appendChild(fila);
+            });
+        }
+
+        formActividad.addEventListener('submit', function (e) {
+            e.preventDefault(); // Evita el error 405 al enviar el formulario
+
+            const selectParticipantes = document.getElementById('participantes');
+            const opcionesSeleccionadas = Array.from(selectParticipantes.selectedOptions);
+
+            const actividad = {
+                nombre: document.getElementById('nombreActividad').value.trim(),
+                fecha: document.getElementById('fechaEvento').value,
+                municipio: document.getElementById('municipio').value,
+                recaudo: document.getElementById('totalRecaudado').value,
+                participantesValores: opcionesSeleccionadas.map(opt => opt.value),
+                participantesTexto: opcionesSeleccionadas.map(opt => opt.text)
+            };
+
+            const indice = parseInt(indiceEdicion.value, 10);
+
+            if (indice === -1) {
+                // Crear nuevo registro
+                actividades.push(actividad);
+            } else {
+                // Actualizar registro existente
+                actividades[indice] = actividad;
+                indiceEdicion.value = '-1';
+                tituloFormulario.textContent = 'Datos de la actividad';
+                btnGuardar.textContent = 'Guardar actividad';
+            }
+
+            localStorage.setItem('club_actividades', JSON.stringify(actividades));
+            formActividad.reset();
+            renderizarTabla();
+        });
+
+        window.editarActividad = function (index) {
+            const act = actividades[index];
+            document.getElementById('nombreActividad').value = act.nombre;
+            document.getElementById('fechaEvento').value = act.fecha;
+            document.getElementById('municipio').value = act.municipio;
+            document.getElementById('totalRecaudado').value = act.recaudo;
+
+            const selectParticipantes = document.getElementById('participantes');
+            Array.from(selectParticipantes.options).forEach(opt => {
+                opt.selected = act.participantesValores.includes(opt.value);
+            });
+
+            indiceEdicion.value = index;
+            tituloFormulario.textContent = 'Editando actividad';
+            btnGuardar.textContent = 'Actualizar actividad';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.eliminarActividad = function (index) {
+            if (confirm('¿Seguro que deseas eliminar esta actividad?')) {
+                actividades.splice(index, 1);
+                localStorage.setItem('club_actividades', JSON.stringify(actividades));
+                renderizarTabla();
+            }
+        };
+
+        btnLimpiar.addEventListener('click', function () {
+            indiceEdicion.value = '-1';
+            tituloFormulario.textContent = 'Datos de la actividad';
+            btnGuardar.textContent = 'Guardar actividad';
+        });
+
+        // Mostrar los registros existentes al abrir la página
+        renderizarTabla();
+    </script>
 </body>
 </html>

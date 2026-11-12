@@ -47,73 +47,85 @@
 
     <div class="container py-4">
         
-        <!-- SECCIÓN ADMINISTRADOR (Empieza con d-none para que el JS decida) -->
+        <!-- SECCIÓN ADMINISTRADOR -->
         <div id="tarjetasAdministrador" class="row g-4 d-none">
             <h5 class="mb-4">Módulo del club de asociados (Admin)</h5>
             
             <div class="col-md-3">
-                <div class="card modulo-card shadow-sm p-3">
-                    <i class="bi bi-people icono-principal"></i>
-                    <h4 class="text-primary mt-2">Asociados</h4>
-                    <strong>Gestión de Asociados</strong>
-                    <p class="small text-muted mt-2">
-                        Administra la información de los asociados, incluyendo sus datos personales, historial de membresía y estado de cuenta.
-                    </p>
-                </div>
+                <a href="RegistroAsociados.html" class="text-decoration-none">
+                    <div class="card modulo-card shadow-sm p-3">
+                        <i class="bi bi-people icono-principal"></i>
+                        <h4 class="text-primary mt-2">Asociados</h4>
+                        <strong>Gestión de Asociados</strong>
+                        <p class="small text-muted mt-2">
+                            Administra la información de los asociados, incluyendo sus datos personales, historial de membresía y estado de cuenta.
+                        </p>
+                    </div>
+                </a>
             </div>
 
             <div class="col-md-3">
-                <div class="card modulo-card shadow-sm p-3">
-                    <i class="bi bi-cash-coin icono-principal"></i>
-                    <h4 class="text-primary mt-2">Prestamos</h4>
-                    <strong>Gestión de Prestamos</strong>
-                    <p class="small text-muted mt-2">
-                        Controla los préstamos realizados a los asociados, verifica los límites de cupo, tasas de interés y el registro de cuotas.
-                    </p>
-                </div>
+                <a href="RegistroPrestamos.html" class="text-decoration-none">
+                    <div class="card modulo-card shadow-sm p-3">
+                        <i class="bi bi-cash-coin icono-principal"></i>
+                        <h4 class="text-primary mt-2">Prestamos</h4>
+                        <strong>Gestión de Prestamos</strong>
+                        <p class="small text-muted mt-2">
+                            Controla los préstamos realizados a los asociados, verifica los límites de cupo, tasas de interés y el registro de cuotas.
+                        </p>
+                    </div>
+                </a>
             </div>
 
             <div class="col-md-3">
-                <div class="card modulo-card shadow-sm p-3">
-                    <i class="bi bi-calendar-event icono-principal"></i>
-                    <h4 class="text-primary mt-2">Actividades</h4>
-                    <strong>Gestión de Actividades</strong>
-                    <p class="small text-muted mt-2">
-                        Registra los eventos organizados por el club, los asociados participantes y la división del dinero recaudado.
-                    </p>
-                </div>
+                <a href="RegistroActividades.html" class="text-decoration-none">
+                    <div class="card modulo-card shadow-sm p-3">
+                        <i class="bi bi-calendar-event icono-principal"></i>
+                        <h4 class="text-primary mt-2">Actividades</h4>
+                        <strong>Gestión de Actividades</strong>
+                        <p class="small text-muted mt-2">
+                            Registra los eventos organizados por el club, los asociados participantes y la división del dinero recaudado.
+                        </p>
+                    </div>
+                </a>
             </div>
 
             <div class="col-md-3">
-                <div class="card modulo-card shadow-sm p-3">
-                    <i class="bi bi-file-earmark-text icono-principal"></i>
-                    <h4 class="text-primary mt-2">Reportes</h4>
-                    <strong>Gestión de Reportes</strong>
-                    <p class="small text-muted mt-2">
-                        Genera consultas generales, estadísticas de recaudo y visualiza el estado financiero global del club.
-                    </p>
-                </div>
+                <a href="Reportes.html" class="text-decoration-none">
+                    <div class="card modulo-card shadow-sm p-3">
+                        <i class="bi bi-file-earmark-text icono-principal"></i>
+                        <h4 class="text-primary mt-2">Reportes</h4>
+                        <strong>Gestión de Reportes</strong>
+                        <p class="small text-muted mt-2">
+                            Genera consultas generales, estadísticas de recaudo y visualiza el estado financiero global del club.
+                        </p>
+                    </div>
+                </a>
             </div>
         </div>
 
-        <!-- VISTA DEL ASOCIADO (Empieza con d-none para que el JS decida) -->
+        <!-- VISTA DEL ASOCIADO -->
         <div id="tarjetasAsociado" class="row g-4 d-none">
             <h5 class="mb-4">Vista del Asociado</h5>
             
             <div class="col-md-3">
-                <div class="card modulo-card asociado shadow-sm p-3">
-                    <i class="bi bi-person-vcard icono-principal"></i>
-                    <h4 class="text-success mt-2">Mi Perfil</h4>
-                    <p class="small text-muted">Ver mis datos y préstamos.</p>
-                </div>
+                <a href="Perfil.html" class="text-decoration-none">
+                    <div class="card modulo-card asociado shadow-sm p-3">
+                        <i class="bi bi-person-vcard icono-principal"></i>
+                        <h4 class="text-success mt-2">Mi Perfil</h4>
+                        <p class="small text-muted">Ver mis datos y préstamos.</p>
+                    </div>
+                </a>
             </div>
             
             <div class="col-md-3">
-                <div class="card modulo-card asociado shadow-sm p-3">
-                    <i class="bi bi-credit-card icono-principal"></i>
-                    <h4 class="text-success mt-2">Mis Pagos</h4>
-                    <p class="small text-muted">Ver mis abonos de mis préstamos.</p>
-                </div>
+                <a href="RegistroPagos.html" class="text-decoration-none">
+                    <div class="card modulo-card asociado shadow-sm p-3">
+                        <i class="bi bi-credit-card icono-principal"></i>
+                        <h4 class="text-success mt-2">Mis Pagos</h4>
+                        <p class="small text-muted">Ver mis abonos de mis préstamos.</p>
+                    </div>
+                </a>
             </div>
         </div>
         
