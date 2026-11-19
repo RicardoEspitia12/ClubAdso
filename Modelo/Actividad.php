@@ -20,13 +20,15 @@ public function obtenerActividades() {
       }
 
       public function guardar($datos){
-        $sql = "INSERT INTO actividades (nombreActividad, fechaEvento, municipio ) 
-        VALUES (:nombre, :fechaEvento, :municipio)";
+        $totalRecaudado = (isset($datos['totalRecaudado']) && $datos['totalRecaudado'] !== '') ? $datos['totalRecaudado'] : 0;
+        $sql = "INSERT INTO actividades (nombreActividad, fechaEvento, municipio, totalRecaudado ) 
+        VALUES (:nombre, :fechaEvento, :municipio, :totalRecaudado)";
         $consulta = $this->conexion->prepare($sql);
         return $consulta->execute([
             ':nombre' => $datos['nombreActividad'],
             ':fechaEvento' => $datos['fechaEvento'],
-            ':municipio' => $datos['municipio']
+            ':municipio' => $datos['municipio'],
+            ':totalRecaudado' => $totalRecaudado
         ]);
       }
 
@@ -42,13 +44,14 @@ public function obtenerActividades() {
 
 
         public function editar($datos){
+          $totalRecaudado = (isset($datos['totalRecaudado']) && $datos['totalRecaudado'] !== '') ? $datos['totalRecaudado'] : 0;
           $sql = "UPDATE actividades SET nombreActividad = :nombre, fechaEvento = :fechaEvento, municipio = :municipio, totalRecaudado = :totalRecaudado WHERE idActividad = :idActividad";
         $consulta = $this->conexion->prepare($sql);
-        return $consulta->execute([
+        $consulta->execute([
             ':nombre' => $datos['nombreActividad'],
             ':fechaEvento' => $datos['fechaEvento'],
             ':municipio' => $datos['municipio'],
-            ':totalRecaudado' => $datos['totalRecaudado'],
+            ':totalRecaudado' => $totalRecaudado,
             ':idActividad' => $datos['idActividad']
         ]);
         if ($consulta->rowCount() > 0) {

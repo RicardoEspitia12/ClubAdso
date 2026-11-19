@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Actividades - Club</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .header-mr {
             background-color: #0d6efd;
@@ -21,56 +22,16 @@
     </div>
 
     <div class="container py-4">
-        <!-- FORMULARIO ORIGINAL DE REGISTRO / EDICIÓN -->
-        <div class="card shadow-sm p-4 mx-auto mb-4" style="max-width: 700px;">
-            <h4 class="mb-4" id="tituloFormulario">Datos de la actividad</h4>
-            <form id="formActividad">
-                <input type="hidden" id="indiceEdicion" value="-1">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="nombreActividad" class="form-label">Nombre de la actividad</label>
-                        <input type="text" id="nombreActividad" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="fechaEvento" class="form-label">Fecha del evento</label>
-                        <input type="date" id="fechaEvento" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="municipio" class="form-label">Municipio</label>
-                        <select id="municipio" class="form-select" required>
-                            <option value="">Seleccione</option>
-                            <option value="Paipa">Paipa</option>
-                            <option value="Sogamoso">Sogamoso</option>
-                            <option value="Duitama">Duitama</option>
-                            <option value="Tunja">Tunja</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6" id="campoTotalRecaudado">
-                        <label for="totalRecaudado" class="form-label">Total recaudado</label>
-                        <input type="number" id="totalRecaudado" class="form-control" min="0" step="0.01" placeholder="Ej.: 1500000.00" required>
-                    </div>
-                    <div class="col-12">
-                        <label for="participantes" class="form-label">Asociados que participaron</label>
-                        <select id="participantes" class="form-select" multiple size="4">
-                            <option value="1025528723">1025528723 - Admin MR</option>
-                            <option value="1025528724">1025528724 - Juan Pérez</option>
-                        </select>
-                        <div class="form-text">Mantén Ctrl para elegir varios</div>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-2 justify-content-end mt-4">
-                    <button type="reset" id="btnLimpiar" class="btn btn-secondary">Limpiar</button>
-                    <button type="submit" id="guardarActividad" class="btn btn-primary">Guardar actividad</button>
-                </div>
-            </form>
-        </div>
-
         <!-- TABLA DEL CRUD (LISTAR, EDITAR, ELIMINAR) -->
         <div class="card shadow-sm p-4 mx-auto" style="max-width: 950px;">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">Actividades Registradas</h5>
-                <span class="badge bg-primary" id="contadorActividades">0 actividades</span>
+                <div class="d-flex align-items-center gap-2">
+                    <h5 class="mb-0">Actividades Registradas</h5>
+                    <span class="badge bg-primary" id="contadorActividades">0 actividades</span>
+                </div>
+                <button type="button" id="nuevaActividad" class="btn btn-primary btn-sm d-none">
+                    <i class="bi bi-plus-lg"></i> Nueva actividad
+                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle mb-0">
@@ -80,13 +41,12 @@
                             <th>Fecha</th>
                             <th>Municipio</th>
                             <th>Total Recaudado</th>
-                            <th>Participantes</th>
-                            <th class="text-center">Acciones</th>
+                            <th id="encabezadoAcciones" class="text-center d-none">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="lista-actividades"></tbody>">
+                    <tbody id="lista-actividades">
                         <tr>
-                            <td colspan="6" class="text-center text-muted">No hay actividades registradas aún.</td>
+                            <td colspan="5" class="text-center text-muted">No hay actividades registradas aún.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -94,8 +54,50 @@
         </div>
     </div>
 
-    <script src="../Controladores/Actividades.js">
-      
-    </script>
+    <!-- MODAL PARA NUEVA / EDITAR ACTIVIDAD -->
+    <div class="modal fade" id="modalActividad" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formActividad">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tituloModalActividad">Nueva actividad</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="idActividad">
+                        <div class="mb-3">
+                            <label for="nombreActividad" class="form-label">Nombre de la actividad</label>
+                            <input type="text" id="nombreActividad" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaEvento" class="form-label">Fecha del evento</label>
+                            <input type="date" id="fechaEvento" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="municipio" class="form-label">Municipio</label>
+                            <select id="municipio" class="form-select" required>
+                                <option value="">Seleccione</option>
+                                <option value="Paipa">Paipa</option>
+                                <option value="Sogamoso">Sogamoso</option>
+                                <option value="Duitama">Duitama</option>
+                                <option value="Tunja">Tunja</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="totalRecaudado" class="form-label">Total recaudado</label>
+                            <input type="number" id="totalRecaudado" class="form-control" min="0" step="0.01" placeholder="Ej.: 1500000.00">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Controladores/Actividades.js"></script>
 </body>
 </html>

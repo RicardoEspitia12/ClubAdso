@@ -17,7 +17,8 @@ function validarActividad($datos){
     $nombre=$datos['nombreActividad'] ?? null;
     $fecha = $datos['fechaEvento'] ?? null;
     $municipio = $datos['municipio'] ?? null;
-    if(!is_string($nombre)|| trim($nombre)===""|| strlen($nombre)> 100 || !is_string($municipio) || trim($municipio) === "" strlen($municipio) > 50) {
+    $totalRecaudado = $datos['totalRecaudado'] ?? 0;
+    if(!is_string($nombre)|| trim($nombre)===""|| strlen($nombre)> 100 || !is_string($municipio) || trim($municipio) === "" || strlen($municipio) > 50) {
        http_response_code(400);
        throw new Exception(
         "Ingresa un nombre y municipio validos"
@@ -26,7 +27,8 @@ function validarActividad($datos){
     return[
         "nombreActividad"=>trim($nombre),
         "fechaEvento"=>$fecha,
-        "municipio"=>trim($municipio)
+        "municipio"=>trim($municipio),
+        "totalRecaudado"=>$totalRecaudado
     ];
 }
 
@@ -82,21 +84,14 @@ try {
             ];
             http_response_code(201);
             break;
+
         case "PUT":
             $datos=leerDatos();
-            $datos["idActividad"]=validarId($datos["idActividad"])??null;
+            $datos["idActividad"]=validarId($datos["idActividad"]??null);
             $datos = array_merge($datos,validarActividad($datos));
             
             if (!$actividad->editar($datos)){
-                http_respponse_code(404);
-                throw new Exception("No se encontro la actividad");
-            }
-            $resultado= [
-                "succes" => true,
-                "mensaje" => "Actividad actualizada correctamente"
-            ];
-            if (!$actividad->eliminar($idActividad)){
-                http_respponse_code(404);
+                http_response_code(404);
                 throw new Exception("No se encontro la actividad");
             }
             $resultado= [
@@ -106,10 +101,20 @@ try {
             
             http_response_code(200);
             break;
-            case "DELETE":
-                $datos=leerDatos();
-                $idActividad=validarId($datos["idActividad"]??null);
 
+        case "DELETE":
+            $datos=leerDatos();
+            $idActividad=validarId($datos["idActividad"]??null);
+            if (!$actividad->eliminar($idActividad)){
+                http_response_code(404);
+                throw new Exception("No se encontro la actividad");
+            }
+            $resultado= [
+                "succes" => true,
+                "mensaje" => "Actividad eliminada correctamente"
+            ];
+            http_response_code(200);
+            break;
 
         default:
             http_response_code(405);
