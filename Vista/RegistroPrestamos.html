@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Préstamos - Club</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .header-mr {
             background-color: #0d6efd;
@@ -21,44 +22,89 @@
     </div>
 
     <div class="container py-4">
-        <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
-            <h4 class="mb-4">Datos del préstamo</h4>
-            <form id="formPrestamo" action="" method="POST">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Código del préstamo</label>
-                        <input type="text" id="codigo" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Documento del asociado</label>
-                        <input type="number" id="documento" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Valor del préstamo</label>
-                        <input type="number" id="valor" class="form-control" min="1" max="80000000" required>
-                        <div class="form-text">Máximo 80 millones de pesos</div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Fecha del préstamo</label>
-                        <input type="date" id="fechaPrestamo" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Tasa de interés (%)</label>
-                        <input type="number" id="tasa" class="form-control" min="0" step="0.01" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Número de cuotas</label>
-                        <input type="number" id="cuotas" class="form-control" min="1" required>
-                    </div>
+        <!-- TABLA DEL CRUD CON BOTÓN NUEVO -->
+        <div class="card shadow-sm p-4 mx-auto" style="max-width: 1000px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <h5 class="mb-0">Préstamos Registrados</h5>
+                    <span class="badge bg-primary" id="contadorPrestamos">0 préstamos</span>
                 </div>
-
-                <div class="d-flex gap-2 justify-content-end mt-4">
-                    <button type="reset" class="btn btn-secondary">Limpiar</button>
-                    <button type="submit" class="btn btn-primary">Registrar préstamo</button>
-                </div>
-            </form>
+                <button type="button" id="btnNuevoPrestamo" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> Registrar préstamo
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Código</th>
+                            <th>Asociado</th>
+                            <th>Valor</th>
+                            <th>Tasa (%)</th>
+                            <th>Cuotas</th>
+                            <th>Fecha</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-prestamos">
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No hay préstamos registrados aún.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
+    <!-- MODAL CON TUS CAMPOS E IDS ORIGINALES -->
+    <div class="modal fade" id="modalPrestamo" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="formPrestamo">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tituloModalPrestamo">Datos del préstamo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="idPrestamo">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Código del préstamo</label>
+                                <input type="text" id="codigo" class="form-control" placeholder="Automático" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Documento del asociado</label>
+                                <input type="number" id="documento" class="form-control" placeholder="Ej: 1025528723" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Valor del préstamo</label>
+                                <input type="number" id="valor" class="form-control" min="1" max="80000000" placeholder="Ej: 5000000" required>
+                                <div class="form-text">Máximo 80 millones de pesos</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha del préstamo</label>
+                                <input type="date" id="fechaPrestamo" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tasa de interés (%)</label>
+                                <input type="number" id="tasa" class="form-control" min="0" step="0.01" placeholder="Ej: 2.5" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Número de cuotas</label>
+                                <input type="number" id="cuotas" class="form-control" min="1" placeholder="Ej: 12" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar préstamo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Controladores/Prestamos.js"></script>
 </body>
 </html>

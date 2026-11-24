@@ -3,59 +3,87 @@ require_once __DIR__ . '/../Config/conexion.php';
 
 class Asociado
 {
-    private $documento;
-    private $nombre;
-    private $apellidos;
-    private $fechaNacimiento;
-    private $genero;
-    private $direccionResidencia;
-    private $ciudad;
-    private $telefono;
-    private $email;
-    private $passwordHash;
-    private $rol;
     private $conexion;
 
-    public function __construct($datos)
+    public function __construct()
     {
-        $this->documento = $datos['documento'];
-        $this->nombre = $datos['nombre'];
-        $this->apellidos = $datos['apellidos'];
-        $this->fechaNacimiento = $datos['fechaNacimiento'];
-        $this->genero = $datos['genero'];
-        $this->direccionResidencia = $datos['direccionResidencia'];
-        $this->ciudad = $datos['ciudad'];
-        $this->telefono = $datos['telefono'];
-        $this->email = $datos['email'];
-        $this->passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
-        
-        // Si el formulario envía un rol, lo toma; de lo contrario, asigna 'asociado' por defecto
-        $this->rol = isset($datos['rol']) && !empty($datos['rol']) ? $datos['rol'] : 'asociado';
-
         $conexionDB = new Conexion();
         $this->conexion = $conexionDB->conectar();
     }
 
-    public function guardar() 
+    // 1. OBTENER TODOS LOS ASOCIADOS (Para la tabla)
+    public function obtenerAsociados()
     {
-        // Se corrige el nombre de la columna a 'password' y se usa el hash ya generado
+        $sql = "SELECT documento, nombre, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email, rol 
+                FROM asociados 
+                ORDER BY apellidos ASC";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute();
+        return $consulta->fetchAll();
+    }
+
+    // 2. GUARDAR UN NUEVO ASOCIADO
+    public function guardar($datos) 
+    {
+        $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
+        $rol = !empty($datos['rol']) ? $datos['rol'] : 'asociado';
+
         $sql = "INSERT INTO asociados (documento, nombre, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email, password, rol) 
-                VALUES (:documento, :nombre, :apellidos, :fechaNacimiento, :genero, :direccionResidencia, :ciudad, :telefono, :email, :password_hash, :rol)"; 
+                VALUES (:documento, :nombre, :apellidos, :fechaNacimiento, :genero, :direccionResidencia, :ciudad, :telefono, :email, :password, :rol)"; 
         
         $consulta = $this->conexion->prepare($sql);
         return $consulta->execute([
-            ':documento' => $this->documento,
-            ':nombre' => $this->nombre,
-            ':apellidos' => $this->apellidos,
-            ':fechaNacimiento' => $this->fechaNacimiento,
-            ':genero' => $this->genero,
-            ':direccionResidencia' => $this->direccionResidencia,
-            ':ciudad' => $this->ciudad,
-            ':telefono' => $this->telefono,
-            ':email' => $this->email,
-            ':password_hash' => $this->passwordHash,
-            ':rol' => $this->rol
+            ':documento'           => $datos['documento'],
+            ':nombre'              => $datos['nombre'],
+            ':apellidos'           => $datos['apellidos'],
+            ':fechaNacimiento'     => $datos['fechaNacimiento'],
+            ':genero'              => $datos['genero'],
+            ':direccionResidencia' => $datos['direccionResidencia'],
+            ':ciudad'              => $datos['ciudad'],
+            ':telefono'            => $datos['telefono'],
+            ':email'               => $datos['email'],
+            ':password'            => $passwordHash,
+            ':rol'                 => $rol
         ]);
+    }
+
+    // 3. EDITAR ASOCIADO (Permite cambiar datos y su ROL)
+    public function editar($datos)
+    {
+        $sql = "UPDATE asociados 
+                SET nombre = :nombre, 
+                    apellidos = :apellidos, 
+                    fechaNacimiento = :fechaNacimiento, 
+                    genero = :genero, 
+                    direccionResidencia = :direccionResidencia, 
+                    ciudad = :ciudad, 
+                    telefono = :telefono, 
+                    email = :email, 
+                    rol = :rol 
+                WHERE documento = :documento";
+
+        $consulta = $this->conexion->prepare($sql);
+        return $consulta->execute([
+            ':nombre'              => $datos['nombre'],
+            ':apellidos'           => $datos['apellidos'],
+            ':fechaNacimiento'     => $datos['fechaNacimiento'],
+            ':genero'              => $datos['genero'],
+            ':direccionResidencia' => $datos['direccionResidencia'],
+            ':ciudad'              => $datos['ciudad'],
+            ':telefono'            => $datos['telefono'],
+            ':email'               => $datos['email'],
+            ':rol'                 => $datos['rol'],
+            ':documento'           => $datos['documento']
+        ]);
+    }
+
+    // 4. ELIMINAR ASOCIADO POR SU DOCUMENTO
+    public function eliminar($documento)
+    {
+        $sql = "DELETE FROM asociados WHERE documento = :documento";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute([':documento' => $documento]);
+        return $consulta->rowCount() > 0;
     }
 }
 ?>
