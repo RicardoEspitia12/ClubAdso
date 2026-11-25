@@ -7,10 +7,144 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --violeta: #6d28d9;
+            --violeta-oscuro: #4c1d95;
+            --violeta-claro: #ede9fe;
+            --coral: #fb7185;
+            --coral-oscuro: #e11d48;
+            --tinta: #1e1b2e;
+            --gris: #6b7280;
+            --linea: #e5e1f0;
+        }
+
+        /* Quitar flechas/ruleta de campos numéricos */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* ===== FONDO ===== */
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--tinta);
+            min-height: 100vh;
+            background-color: #f5f3ff !important;
+            background-image:
+                radial-gradient(circle at 90% 8%, rgba(251, 113, 133, .22) 0, transparent 34%),
+                radial-gradient(circle at 6% 92%, rgba(139, 92, 246, .22) 0, transparent 38%),
+                repeating-linear-gradient(135deg, rgba(109, 40, 217, .045) 0, rgba(109, 40, 217, .045) 2px, transparent 2px, transparent 18px);
+            background-attachment: fixed;
+        }
+
+        /* ===== ENCABEZADO ===== */
         .header-mr {
-            background-color: #0d6efd;
-            color: white;
-            padding: 20px 30px;
+            background: linear-gradient(115deg, var(--violeta-oscuro) 0%, var(--violeta) 65%, #8b5cf6 100%) !important;
+            color: #fff;
+            padding: 28px 48px !important;
+            border-bottom: 5px solid var(--coral);
+            box-shadow: 0 8px 24px rgba(76, 29, 149, .28);
+        }
+        .header-mr h3 { margin: 0; font-weight: 700; letter-spacing: .2px; }
+        .header-mr .btn-light {
+            background: rgba(255, 255, 255, .15);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .55);
+            border-radius: 10px;
+            padding: 8px 20px;
+            transition: background .2s, color .2s;
+        }
+        .header-mr .btn-light:hover { background: #fff; color: var(--violeta-oscuro); }
+
+        /* ===== TARJETA PRINCIPAL ===== */
+        .container.py-4 { padding-top: 2.5rem !important; padding-bottom: 3rem !important; }
+        .card {
+            max-width: 1180px !important;
+            border: 0;
+            border-radius: 18px;
+            padding: 2rem !important;
+            box-shadow: 0 18px 45px rgba(76, 29, 149, .15) !important;
+        }
+        .card h5 { font-size: 1.35rem; font-weight: 700; color: var(--violeta-oscuro); }
+        .card .d-flex.mb-3 { margin-bottom: 1.5rem !important; }
+
+        #contadorPrestamos.badge {
+            background: var(--violeta-claro) !important;
+            color: var(--violeta-oscuro) !important;
+            border-radius: 999px;
+            font-weight: 600;
+            padding: .5em .9em;
+        }
+        #btnNuevoPrestamo {
+            background: var(--coral-oscuro);
+            border-color: var(--coral-oscuro);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 10px;
+            padding: 9px 20px;
+        }
+        #btnNuevoPrestamo:hover { background: #be123c; border-color: #be123c; }
+
+        /* ===== TABLA ===== */
+        .table-responsive { border-radius: 14px; border: 1px solid var(--linea); }
+        .table { --bs-table-hover-bg: #f5f3ff; margin: 0 !important; }
+        .table-bordered > :not(caption) > * > * { border-width: 0 0 1px 0; border-color: var(--linea); }
+        .table > :not(caption) > * > * { padding: 15px 16px; }
+        .table thead.table-light th {
+            background: var(--violeta-oscuro) !important;
+            color: #fff !important;
+            font-weight: 600;
+            font-size: .9rem;
+            border-bottom: 0;
+        }
+        .table tbody tr:last-child td { border-bottom: 0; }
+        .table tbody tr:nth-child(even) td { background: #faf9ff; }
+        .table tbody td:nth-child(1) { font-weight: 700; color: var(--violeta); }
+        .table tbody td:nth-child(3) { font-weight: 700; color: var(--tinta); font-variant-numeric: tabular-nums; }
+
+        /* Botones de acción */
+        .btn-outline-primary { color: var(--violeta); border-color: var(--violeta); border-radius: 8px; }
+        .btn-outline-primary:hover { background: var(--violeta); border-color: var(--violeta); color: #fff; }
+        .btn-outline-danger { border-radius: 8px; }
+
+        /* ===== MODAL ===== */
+        .modal-content { border: 0; border-radius: 18px; overflow: hidden; box-shadow: 0 25px 60px rgba(30, 27, 46, .35); }
+        .modal-header {
+            background: linear-gradient(115deg, var(--violeta-oscuro), var(--violeta));
+            color: #fff;
+            border: 0;
+            padding: 20px 28px;
+            border-bottom: 4px solid var(--coral);
+        }
+        .modal-title { font-weight: 700; }
+        .modal-header .btn-close { filter: invert(1); opacity: .9; }
+        .modal-body { background: #faf9ff; padding: 26px 28px; }
+        .modal-body .form-label { font-size: .85rem; font-weight: 600; color: var(--gris); margin-bottom: 4px; }
+        .modal-body .form-control {
+            border: 1.5px solid var(--linea);
+            border-radius: 10px;
+            padding: 10px 12px;
+            background-color: #fff;
+        }
+        .modal-body .form-control:focus {
+            border-color: var(--violeta);
+            box-shadow: 0 0 0 .2rem rgba(139, 92, 246, .22);
+        }
+        .modal-body .form-control[readonly] { background: #efecf8; color: var(--violeta-oscuro); font-weight: 600; }
+        .modal-body .form-text { color: var(--coral-oscuro); font-size: .78rem; }
+        .modal-footer { background: #fff; border-top: 1px solid var(--linea); padding: 16px 28px; }
+        .modal-footer .btn-primary { background: var(--violeta); border-color: var(--violeta); border-radius: 10px; padding: 8px 24px; font-weight: 600; }
+        .modal-footer .btn-primary:hover { background: var(--violeta-oscuro); border-color: var(--violeta-oscuro); }
+        .modal-footer .btn-secondary { background: transparent; color: var(--gris); border-color: var(--linea); border-radius: 10px; padding: 8px 22px; }
+
+        @media (max-width: 768px) {
+            .header-mr { padding: 20px 18px !important; }
+            .card { padding: 1.2rem !important; }
         }
     </style>
 </head>
@@ -56,7 +190,7 @@
         </div>
     </div>
 
-    <!-- MODAL CON TUS CAMPOS E IDS ORIGINALES -->
+    <!-- MODAL CON CAMPOS E IDS ORIGINALES -->
     <div class="modal fade" id="modalPrestamo" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -67,11 +201,8 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="idPrestamo">
+                        <input type="hidden" id="codigo">
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Código del préstamo</label>
-                                <input type="text" id="codigo" class="form-control" placeholder="Automático" readonly>
-                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">Documento del asociado</label>
                                 <input type="number" id="documento" class="form-control" placeholder="Ej: 1025528723" required>
@@ -87,11 +218,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Tasa de interés (%)</label>
-                                <input type="number" id="tasa" class="form-control" min="0" step="0.01" placeholder="Ej: 2.5" required>
+                                <input type="number" id="tasa" class="form-control" min="0.1" max="100" step="0.01" placeholder="Ej: 2.5" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Número de cuotas</label>
-                                <input type="number" id="cuotas" class="form-control" min="1" placeholder="Ej: 12" required>
+                                <input type="number" id="cuotas" class="form-control" min="1" max="120" step="1" placeholder="Ej: 12" required>
                             </div>
                         </div>
                     </div>
@@ -105,6 +236,17 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Quita el foco del botón antes de cerrar el modal (evita el aviso de aria-hidden)
+        document.getElementById('modalPrestamo').addEventListener('hide.bs.modal', () => {
+            if (document.activeElement) document.activeElement.blur();
+        });
+
+        // Evita que la rueda del mouse cambie los números
+        document.querySelectorAll('#formPrestamo input[type="number"]').forEach((input) => {
+            input.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+        });
+    </script>
     <script src="../Controladores/Prestamos.js"></script>
 </body>
 </html>

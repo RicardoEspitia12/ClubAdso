@@ -150,8 +150,18 @@ formPrestamo.addEventListener("submit", async (evento) => {
         cuotas: Number(document.getElementById("cuotas").value)
     };
 
-    if (datos.valor > 80000000) {
-        alert("El valor máximo del préstamo es de 80 millones de pesos.");
+    if (datos.valor <= 0 || datos.valor > 80000000) {
+        alert("El valor del préstamo debe ser mayor a 0 y máximo de 80 millones de pesos.");
+        return;
+    }
+
+    if (datos.tasa <= 0 || datos.tasa > 100) {
+        alert("Ingresa una tasa de interés válida entre 0.1% y 100%.");
+        return;
+    }
+
+    if (!Number.isInteger(datos.cuotas) || datos.cuotas < 1 || datos.cuotas > 120) {
+        alert("El número de cuotas debe ser un entero entre 1 y 120.");
         return;
     }
 

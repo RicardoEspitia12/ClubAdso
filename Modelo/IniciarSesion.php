@@ -33,8 +33,8 @@ try {
     require_once __DIR__ . '/../Config/conexion.php';
     $conexion = (new Conexion())->conectar();
 
-    // Buscamos al asociado en la base de datos usando el número de documento
-    $consulta = $conexion->prepare("SELECT * FROM asociados WHERE documento = :documento");
+    // Buscamos al asociado en la base de datos usando el número de documento o correo
+    $consulta = $conexion->prepare("SELECT * FROM asociados WHERE documento = :documento OR email = :documento");
     $consulta->execute([':documento' => $documento]);
     $asociado = $consulta->fetch();
 

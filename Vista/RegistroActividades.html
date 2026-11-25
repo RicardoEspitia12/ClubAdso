@@ -7,46 +7,79 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        /* Mismo fondo corporativo del Dashboard y Reportes */
+        body {
+            background: linear-gradient(135deg, #0b1329 0%, #17223b 50%, #0b1329 100%);
+            min-height: 100vh;
+            color: #334155;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Encabezado elegante con borde azul administrativo */
         .header-mr {
-            background-color: #0d6efd;
-            color: white;
-            padding: 20px 30px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid #0d6efd;
+            color: #f8fafc;
+            padding: 16px 35px;
+        }
+
+        /* Panel blanco con sombra suave y bordes redondeados */
+        .panel-crud {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: none;
+            padding: 24px;
+        }
+
+        /* Encabezado oscuro para la tabla con alto contraste */
+        .table-custom thead {
+            background: #0f172a;
+            color: #ffffff;
+        }
+        .table-custom tbody tr:hover {
+            background-color: #f8fafc;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
+    <!-- Encabezado con tu título original y botón estilizado -->
     <div class="header-mr d-flex justify-content-between align-items-center">
-        <h3>Registro de Actividades</h3>
-        <a href="dashboard.html" class="btn btn-light btn-sm">Volver al Dashboard</a>
+        <h3 class="mb-0">Registro de Actividades</h3>
+        <a href="dashboard.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-house-door me-1"></i> Volver al Dashboard
+        </a>
     </div>
 
     <div class="container py-4">
-        <!-- TABLA DEL CRUD (LISTAR, EDITAR, ELIMINAR) -->
-        <div class="card shadow-sm p-4 mx-auto" style="max-width: 950px;">
+        <!-- TABLA DEL CRUD CON TUS MISMOS IDs Y ESTRUCTURA -->
+        <div class="panel-crud mx-auto" style="max-width: 950px;">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex align-items-center gap-2">
-                    <h5 class="mb-0">Actividades Registradas</h5>
-                    <span class="badge bg-primary" id="contadorActividades">0 actividades</span>
+                    <h5 class="fw-bold text-dark mb-0">Actividades Registradas</h5>
+                    <span class="badge bg-primary rounded-pill px-3 py-2" id="contadorActividades">0 actividades</span>
                 </div>
-                <button type="button" id="nuevaActividad" class="btn btn-primary btn-sm d-none">
-                    <i class="bi bi-plus-lg"></i> Nueva actividad
+                <button type="button" id="nuevaActividad" class="btn btn-primary btn-sm px-3 fw-semibold d-none">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva actividad
                 </button>
             </div>
+            
             <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-bordered table-custom align-middle mb-0">
+                    <thead>
                         <tr>
                             <th>Actividad</th>
                             <th>Fecha</th>
                             <th>Municipio</th>
                             <th>Total Recaudado</th>
-                            <th id="encabezadoAcciones" class="text-center d-none">Acciones</th>
+                            <th id="encabezadoAcciones" class="text-center d-none" style="width: 180px;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="lista-actividades">
                         <tr>
-                            <td colspan="5" class="text-center text-muted">No hay actividades registradas aún.</td>
+                            <td colspan="5" class="text-center py-4 text-muted">No hay actividades registradas aún.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -54,27 +87,27 @@
         </div>
     </div>
 
-    <!-- MODAL PARA NUEVA / EDITAR ACTIVIDAD -->
+    <!-- TU MODAL ORIGINAL PARA NUEVA / EDITAR ACTIVIDAD (Intacto) -->
     <div class="modal fade" id="modalActividad" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content border-0 shadow">
                 <form id="formActividad">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="tituloModalActividad">Nueva actividad</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-bold" id="tituloModalActividad">Nueva actividad</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body p-4">
                         <input type="hidden" id="idActividad">
                         <div class="mb-3">
-                            <label for="nombreActividad" class="form-label">Nombre de la actividad</label>
+                            <label for="nombreActividad" class="form-label small fw-semibold">Nombre de la actividad</label>
                             <input type="text" id="nombreActividad" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label for="fechaEvento" class="form-label">Fecha del evento</label>
+                            <label for="fechaEvento" class="form-label small fw-semibold">Fecha del evento</label>
                             <input type="date" id="fechaEvento" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label for="municipio" class="form-label">Municipio</label>
+                            <label for="municipio" class="form-label small fw-semibold">Municipio</label>
                             <select id="municipio" class="form-select" required>
                                 <option value="">Seleccione</option>
                                 <option value="Paipa">Paipa</option>
@@ -84,19 +117,20 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="totalRecaudado" class="form-label">Total recaudado</label>
+                            <label for="totalRecaudado" class="form-label small fw-semibold">Total recaudado</label>
                             <input type="number" id="totalRecaudado" class="form-control" min="0" step="0.01" placeholder="Ej.: 1500000.00">
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary btn-sm px-4 fw-semibold">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <!-- TUS MISMOS SCRIPTS ORIGINALES -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../Controladores/Actividades.js"></script>
 </body>

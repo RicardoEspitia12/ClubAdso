@@ -3,53 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Pago - Club</title>
+    <title>Registro de Pagos y Abonos - Club</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
-        .header-mr {
-            background-color: #0d6efd;
-            color: white;
-            padding: 20px 30px;
+        /* Fondo con degradado profundo y elegante acorde al club */
+        body {
+            background: linear-gradient(135deg, #0b1329 0%, #17223b 50%, #0b1329 100%);
+            min-height: 100vh;
+            color: #334155;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Encabezado superior con efecto cristal */
+        .header-asociado {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid #10b981;
+            color: #f8fafc;
+            padding: 16px 35px;
+        }
+
+        /* Paneles blancos con esquinas redondeadas y sombras suaves */
+        .panel-blanco {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            border: none;
+            padding: 24px;
+        }
+
+        /* Tarjetas de estadísticas superiores (KPIs) */
+        .card-kpi {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: none;
+            border-left: 5px solid #10b981;
+            transition: transform 0.2s;
+        }
+        .card-kpi:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Iconos en los campos de entrada */
+        .input-group-text {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            color: #059669;
+        }
+
+        /* Estilo de la tabla moderna */
+        .table-custom thead {
+            background: #064e3b;
+            color: #ffffff;
+        }
+        .table-custom tbody tr:hover {
+            background-color: #f8fafc;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <div class="header-mr d-flex justify-content-between align-items-center">
-        <h3>Registro de Pago</h3>
-        <a href="dashboard.html" class="btn btn-light btn-sm">Volver al Dashboard</a>
-    </div>
-
-    <div class="container py-4">
-        <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
-            <h4 class="mb-4">Datos del pago</h4>
-            <form id="formPago" action="" method="POST">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Código del préstamo</label>
-                        <input type="text" id="codigoPrestamo" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Fecha de pago</label>
-                        <input type="date" id="fechaPago" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Número de cuota</label>
-                        <input type="number" id="numeroCuota" class="form-control" min="1" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Valor pagado</label>
-                        <input type="number" id="valorPago" class="form-control" min="1" required>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-2 justify-content-end mt-4">
-                    <button type="reset" class="btn btn-secondary">Limpiar</button>
-                    <button type="submit" class="btn btn-primary">Registrar pago</button>
-                </div>
-            </form>
+    <!-- Encabezado -->
+    <div class="header-asociado d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-credit-card-2-front text-success fs-3"></i>
+            <div>
+                <h4 class="mb-0 fw-bold">Módulo de Pagos y Abonos</h4>
+                <small class="text-white-50">Portal del Asociado - Registro y Control de Cuotas</small>
+            </div>
         </div>
+        <a href="dashboard.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-house-door me-1"></i> Volver al Dashboard
+        </a>
     </div>
 
+    <div class="container py-4" style="max-width: 1150px;">
+
+        <!-- 2 Tarjetas de Resumen Superior -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="card card-kpi p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="p-3 bg-success bg-opacity-10 text-success rounded-3 me-3 fs-3">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-semibold">Total Dinero Abonado</div>
+                            <h3 class="mb-0 fw-bold text-success" id="kpiTotalAbonado">$ 0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-kpi p-3" style="border-left-color: #0284c7;">
+                    <div class="d-flex align-items-center">
+                        <div class="p-3 bg-info bg-opacity-10 text-primary rounded-3 me-3 fs-3">
+                            <i class="bi bi-receipt"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-semibold">Número de Abonos Realizados</div>
+                            <h3 class="mb-0 fw-bold text-dark" id="kpiCantidadPagos">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESTRUCTURA EN DOS COLUMNAS (Lado a Lado) -->
+        <div class="row g-4">
+
+            <!-- COLUMNA IZQUIERDA: Formulario de Pago -->
+            <div class="col-lg-5">
+                <div class="panel-blanco h-100">
+                    <h5 class="fw-bold text-dark mb-1">
+                        <i class="bi bi-plus-circle text-success me-2"></i>Registrar Abono
+                    </h5>
+                    <p class="text-muted small mb-4">Diligencia los datos del abono correspondiente.</p>
+
+                    <form id="formPago">
+                        
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Código del préstamo</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                                <input type="number" id="codigoPrestamo" class="form-control" placeholder="Ej: 11" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Fecha de pago</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                <input type="date" id="fechaPago" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Número de cuota</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-123"></i></span>
+                                <input type="number" id="numeroCuota" class="form-control" min="1" placeholder="Ej: 1" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-dark">Valor pagado ($)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                                <input type="number" id="valorPago" class="form-control" min="1" step="0.01" placeholder="Ej: 100000" required>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button type="reset" class="btn btn-outline-secondary btn-sm px-3">Limpiar</button>
+                            <button type="submit" class="btn btn-success btn-sm px-4 fw-semibold">
+                                <i class="bi bi-check2-circle me-1"></i> Registrar pago
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: Tabla de Historial de Abonos -->
+            <div class="col-lg-7">
+                <div class="panel-blanco h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-dark mb-0">
+                            <i class="bi bi-clock-history text-success me-2"></i>Mis Abonos Registrados
+                        </h5>
+                        <span class="badge bg-success" id="contadorPagos">0 abono(s)</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-custom align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 45px;">N°</th>
+                                    <th>Fecha</th>
+                                    <th class="text-center">Préstamo</th>
+                                    <th class="text-end">Valor Abonado</th>
+                                    <th class="text-center">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-pagos">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">Cargando tus abonos...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Controladores/Pagos.js"></script>
 </body>
 </html>
