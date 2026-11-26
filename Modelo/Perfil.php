@@ -36,8 +36,9 @@ class Perfil
                 FROM prestamos p
                 LEFT JOIN pagos_cuotas pc ON p.idPrestamo = pc.idPrestamo
                 WHERE p.idAsociado = :idAsociado
+                  AND p.estado = 'Aprobado'
                 GROUP BY p.idPrestamo
-                ORDER BY p.fechaPrestamo DESC";
+                ORDER BY p.fechaPrestamo DESC"; // AGREGADO: solo préstamos aprobados (la línea AND p.estado)
 
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute([':idAsociado' => $idAsociado]);

@@ -47,6 +47,16 @@ try {
             ]);
             break;
 
+        // PATCH: Aprobar o rechazar una solicitud pendiente
+        case 'PATCH':
+            $datos = json_decode(file_get_contents('php://input'), true);
+            $resultado = $prestamoObj->cambiarEstado($datos['idPrestamo'], $datos['estado']);
+            echo json_encode([
+                'success' => $resultado,
+                'mensaje' => $resultado ? 'Estado del préstamo actualizado' : 'No se pudo actualizar el estado'
+            ]);
+            break;
+
         // DELETE: Eliminar préstamo
         case 'DELETE':
             $datos = json_decode(file_get_contents('php://input'), true);

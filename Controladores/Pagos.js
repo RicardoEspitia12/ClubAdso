@@ -49,6 +49,20 @@ function mostrarPagos() {
         contador.textContent = `${misPagos.length} abono(s)`;
     }
 
+    // --- CORRECCIÓN: actualizar las tarjetas de resumen (KPIs) ---
+    const totalAbonado = misPagos.reduce((suma, p) => suma + Number(p.valorCuota), 0);
+
+    const kpiTotal = document.getElementById("kpiTotalAbonado");
+    if (kpiTotal) {
+        kpiTotal.textContent = totalAbonado.toLocaleString("es-CO", { style: "currency", currency: "COP" });
+    }
+
+    const kpiCantidad = document.getElementById("kpiCantidadPagos");
+    if (kpiCantidad) {
+        kpiCantidad.textContent = misPagos.length;
+    }
+    // --- FIN DE LA CORRECCIÓN ---
+
     if (misPagos.length === 0) {
         const fila = document.createElement("tr");
         const celda = document.createElement("td");

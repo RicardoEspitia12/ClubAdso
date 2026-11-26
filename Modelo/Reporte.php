@@ -17,7 +17,8 @@ class Reporte
         // Total prestado y cantidad de préstamos
         $sqlPrestamos = "SELECT COUNT(*) AS totalPrestamos, 
                                 COALESCE(SUM(valorPrestamo), 0) AS totalPrestado 
-                         FROM prestamos";
+                         FROM prestamos
+                         WHERE estado = 'Aprobado'"; // AGREGADO: solo préstamos aprobados
         $stmtPrestamos = $this->conexion->prepare($sqlPrestamos);
         $stmtPrestamos->execute();
         $datosPrestamos = $stmtPrestamos->fetch();
@@ -91,7 +92,7 @@ class Reporte
                 FROM prestamos p
                 INNER JOIN asociados a ON p.idAsociado = a.idAsociado
                 LEFT JOIN pagos_cuotas pc ON p.idPrestamo = pc.idPrestamo
-                WHERE 1=1";
+                WHERE 1=1 AND p.estado = 'Aprobado'"; // AGREGADO: solo préstamos aprobados
 
         $parametros = [];
 

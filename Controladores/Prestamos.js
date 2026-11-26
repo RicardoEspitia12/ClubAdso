@@ -49,7 +49,7 @@ function mostrarPrestamos() {
     if (prestamos.length === 0) {
         const fila = document.createElement("tr");
         const celda = document.createElement("td");
-        celda.colSpan = 7;
+        celda.colSpan = 8; // CAMBIO OBLIGATORIO: 7 -> 8 (nueva columna Estado)
         celda.className = "text-center py-4 text-muted";
         celda.textContent = "No hay préstamos registrados aún.";
         fila.append(celda);
@@ -66,8 +66,36 @@ function mostrarPrestamos() {
             maximumFractionDigits: 0
         });
 
+        // AGREGADO: celda de Estado con color
+        const celdaEstado = document.createElement("td");
+        celdaEstado.className = "text-center";
+        const badgeEstado = document.createElement("span");
+        const coloresEstado = { Pendiente: "bg-warning", Aprobado: "bg-success", Rechazado: "bg-danger" };
+        badgeEstado.className = "badge " + (coloresEstado[prestamo.estado] || "bg-secondary");
+        badgeEstado.textContent = prestamo.estado;
+        celdaEstado.append(badgeEstado);
+        // FIN AGREGADO
+
         const celdaAcciones = document.createElement("td");
         celdaAcciones.className = "text-nowrap text-center";
+
+        // AGREGADO: Aprobar / Rechazar solo si está Pendiente
+        if (prestamo.estado === "Pendiente") {
+            const botonAprobar = document.createElement("button");
+            botonAprobar.type = "button";
+            botonAprobar.className = "btn btn-sm btn-success me-2";
+            botonAprobar.innerHTML = '<i class="bi bi-check-lg"></i> Aprobar';
+            botonAprobar.addEventListener("click", () => cambiarEstado(prestamo, "Aprobado"));
+
+            const botonRechazar = document.createElement("button");
+            botonRechazar.type = "button";
+            botonRechazar.className = "btn btn-sm btn-outline-danger me-2";
+            botonRechazar.innerHTML = '<i class="bi bi-x-lg"></i> Rechazar';
+            botonRechazar.addEventListener("click", () => cambiarEstado(prestamo, "Rechazado"));
+
+            celdaAcciones.append(botonAprobar, botonRechazar);
+        }
+        // FIN AGREGADO
 
         const botonEditar = document.createElement("button");
         botonEditar.type = "button";
@@ -90,6 +118,7 @@ function mostrarPrestamos() {
             crearCelda(`${prestamo.tasaInteres}%`),
             crearCelda(`${prestamo.numeroCuotas} cuotas`),
             crearCelda(prestamo.fechaPrestamo),
+            celdaEstado, // AGREGADO
             celdaAcciones
         );
 
@@ -150,20 +179,29 @@ formPrestamo.addEventListener("submit", async (evento) => {
         cuotas: Number(document.getElementById("cuotas").value)
     };
 
-    if (datos.valor <= 0 || datos.valor > 80000000) {
-        alert("El valor del préstamo debe ser mayor a 0 y máximo de 80 millones de pesos.");
+    if (datos.valor > 80000000) {
+        alert("El valor máximo del préstamo es de 80 millones de pesos.");
         return;
     }
 
-    if (datos.tasa <= 0 || datos.tasa > 100) {
-        alert("Ingresa una tasa de interés válida entre 0.1% y 100%.");
+    // AGREGADO: validaciones nuevas (el servidor las repite)
+    if (datos.valor < 100000) {
+        alert("El valor mínimo del préstamo es de $100.000.");
         return;
     }
-
-    if (!Number.isInteger(datos.cuotas) || datos.cuotas < 1 || datos.cuotas > 120) {
-        alert("El número de cuotas debe ser un entero entre 1 y 120.");
+    if (datos.tasa < 0.5 || datos.tasa > 3) {
+        alert("La tasa de interés debe estar entre 0,5 % y 3 % mensual.");
         return;
     }
+    if (!Number.isInteger(datos.cuotas) || datos.cuotas < 1 || datos.cuotas > 60) {
+        alert("El número de cuotas debe ser un entero entre 1 y 60.");
+        return;
+    }
+    if (datos.fechaPrestamo > new Date().toISOString().split("T")[0]) {
+        alert("La fecha del préstamo no puede ser futura.");
+        return;
+    }
+    // FIN AGREGADO
 
     try {
         if (idPrestamoVal) {
@@ -194,6 +232,22 @@ async function eliminarPrestamo(prestamo) {
         alert(error.message);
     }
 }
+
+// AGREGADO: aprobar o rechazar una solicitud pendiente
+async function cambiarEstado(prestamo, nuevoEstado) {
+    const accion = nuevoEstado === "Aprobado" ? "aprobar" : "rechazar";
+    const confirmar = window.confirm(`¿Deseas ${accion} el préstamo #${prestamo.idPrestamo} del asociado ${prestamo.idAsociado}? Tasa actual: ${prestamo.tasaInteres}% (si no es la correcta, cancela y usa Editar primero).`);
+    if (!confirmar) return;
+
+    try {
+        await solicitarApi("PATCH", { idPrestamo: prestamo.idPrestamo, estado: nuevoEstado });
+        await cargarPrestamos();
+        alert(`Préstamo ${nuevoEstado.toLowerCase()} correctamente`);
+    } catch (error) {
+        alert(error.message);
+    }
+}
+// FIN AGREGADO
 
 // Escuchar clic en botón Registrar Préstamo
 document.getElementById("btnNuevoPrestamo")?.addEventListener("click", abrirNuevoPrestamo);

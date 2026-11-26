@@ -18,17 +18,6 @@
             --linea: #e5e1f0;
         }
 
-        /* Quitar flechas/ruleta de campos numéricos */
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-            appearance: textfield;
-        }
-
         /* ===== FONDO ===== */
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -146,6 +135,16 @@
             .header-mr { padding: 20px 18px !important; }
             .card { padding: 1.2rem !important; }
         }
+
+        /* ===== AGREGADO: quitar las ruedas (flechas) de los campos numéricos ===== */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+
+        /* ===== AGREGADO: colores de la etiqueta Estado ===== */
+        .badge.bg-success { background: #dcfce7 !important; color: #166534 !important; border-radius: 999px; padding: .5em .9em; font-weight: 600; }
+        .badge.bg-warning { background: #fef3c7 !important; color: #92400e !important; border-radius: 999px; padding: .5em .9em; font-weight: 600; }
+        .badge.bg-danger  { background: #fee2e2 !important; color: #b91c1c !important; border-radius: 999px; padding: .5em .9em; font-weight: 600; }
     </style>
 </head>
 <body class="bg-light">
@@ -177,12 +176,13 @@
                             <th>Tasa (%)</th>
                             <th>Cuotas</th>
                             <th>Fecha</th>
+                            <th class="text-center">Estado</th> <!-- AGREGADO -->
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="lista-prestamos">
                         <tr>
-                            <td colspan="7" class="text-center text-muted">No hay préstamos registrados aún.</td>
+                            <td colspan="8" class="text-center text-muted">No hay préstamos registrados aún.</td> <!-- CAMBIO OBLIGATORIO: colspan 7 -> 8 -->
                         </tr>
                     </tbody>
                 </table>
@@ -190,7 +190,7 @@
         </div>
     </div>
 
-    <!-- MODAL CON CAMPOS E IDS ORIGINALES -->
+    <!-- MODAL CON TUS CAMPOS E IDS ORIGINALES -->
     <div class="modal fade" id="modalPrestamo" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -201,15 +201,18 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="idPrestamo">
-                        <input type="hidden" id="codigo">
                         <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Código del préstamo</label>
+                                <input type="text" id="codigo" class="form-control" placeholder="Automático" readonly>
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">Documento del asociado</label>
                                 <input type="number" id="documento" class="form-control" placeholder="Ej: 1025528723" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Valor del préstamo</label>
-                                <input type="number" id="valor" class="form-control" min="1" max="80000000" placeholder="Ej: 5000000" required>
+                                <input type="number" id="valor" class="form-control" min="100000" max="80000000" step="1" placeholder="Ej: 5000000" required> <!-- AGREGADO: min y step -->
                                 <div class="form-text">Máximo 80 millones de pesos</div>
                             </div>
                             <div class="col-md-6">
@@ -218,11 +221,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Tasa de interés (%)</label>
-                                <input type="number" id="tasa" class="form-control" min="0.1" max="100" step="0.01" placeholder="Ej: 2.5" required>
+                                <input type="number" id="tasa" class="form-control" min="0.5" max="3" step="0.01" placeholder="Ej: 2.5" required> <!-- AGREGADO: min y max -->
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Número de cuotas</label>
-                                <input type="number" id="cuotas" class="form-control" min="1" max="120" step="1" placeholder="Ej: 12" required>
+                                <input type="number" id="cuotas" class="form-control" min="1" max="60" step="1" placeholder="Ej: 12" required> <!-- AGREGADO: max y step -->
                             </div>
                         </div>
                     </div>
@@ -242,10 +245,11 @@
             if (document.activeElement) document.activeElement.blur();
         });
 
-        // Evita que la rueda del mouse cambie los números
-        document.querySelectorAll('#formPrestamo input[type="number"]').forEach((input) => {
-            input.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
-        });
+        // AGREGADO: evita que la rueda del mouse cambie los números de un campo numérico
+        document.addEventListener('wheel', () => {
+            const el = document.activeElement;
+            if (el && el.type === 'number') el.blur();
+        }, { passive: true });
     </script>
     <script src="../Controladores/Prestamos.js"></script>
 </body>
